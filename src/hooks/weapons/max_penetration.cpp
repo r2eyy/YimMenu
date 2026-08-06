@@ -1,5 +1,5 @@
 #include "max_penetration.hpp"
-
+// 2nd build failed... hope ts will fix it
 namespace big
 {
 	void max_penetration_tick()
@@ -33,9 +33,19 @@ namespace big
 			Vector3 dir = {-sin(yaw)*cos(pitch), cos(yaw)*cos(pitch), sin(pitch)};
 			Vector3 end = {pos.x+dir.x*5000, pos.y+dir.y*5000, pos.z+dir.z*5000};
 
-			MISC::SHOOT_SINGLE_BULLET_BETWEEN_COORDS_IGNORE_ENTITY(
-				pos.x,pos.y,pos.z, end.x,end.y,end.z,
-				200,true,weapon,player,true,false,-1.0,0,false,player);
+			// Try the overload with fewer args first
+			MISC::SHOOT_SINGLE_BULLET_BETWEEN_COORDS(
+				pos.x, pos.y, pos.z,
+				end.x, end.y, end.z,
+				200,     // damage
+				true,    // perfect accuracy
+				weapon,  // weapon hash
+				player,  // owner
+				true,    // create trace
+				false,   // not silenced
+				-1.0f,   // penetration
+				0        // ped type
+			);
 		});
 	}
 }
