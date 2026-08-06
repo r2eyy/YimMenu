@@ -1,26 +1,18 @@
-name: CI
+name: Build Test
 
 on:
-  pull_request:
-    paths:
-      - src/**
-      - cmake/**
-      - CMakeLists.txt
-      - .github/workflows/ci.yml
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  workflow_dispatch:
+  push:
+    branches: [ "master" ]
 
 jobs:
-  ci:
+  build:
     runs-on: windows-2022
-    name: CI
+    name: Build Test
     steps:
       - uses: actions/checkout@v4
-
-      - name: Check CMake version
-        run: cmake --version
+        with:
+          submodules: recursive
 
       - name: Setup MSVC environment
         uses: ilammy/msvc-dev-cmd@v1
@@ -28,31 +20,13 @@ jobs:
           arch: amd64
 
       - name: Generate CMake project
-        run: cmake -D CMAKE_BUILD_TYPE=RelWithDebInfo -D OPTIMIZE=YES -D CMAKE_POLICY_VERSION_MINIMUM=3.5 -S. -Bbuild -G Ninja
+        run: cmake -D CMAKE_BUILD_TYPE=RelWithDebInfo -D OPTIMIZE=YES -S. -Bbuild -G Ninja
 
-      - name: Build 64bit release DLL
-        run: cmake --build ./build --config RelWithDebInfo --target YimMenu --
+      - name: Build DLL
+        run: cmake --build ./build --config RelWithDebInfo --target YimMenu
 
-      - name: Check if DLL got built
-        run: if (-Not (Test-Path -path "build/YimMenu.dll")) {throw 1}
-
-      - name: Rename DLL to YimMenu-dev-{GITHUB_SHA}.dll
-        run: |
-          del YimMenu-dev-*.dll
-          del YimMenu-dev-*.pdb
-          ren YimMenu.dll YimMenu-dev-${{github.sha}}.dll
-          ren YimMenu.pdb YimMenu.pdb
-        working-directory: build/
-
-      - name: Upload Artifact (dll)
+      - name: Upload DLL
         uses: actions/upload-artifact@v4
         with:
-          name: binary
-          path: |
-            build/YimMenu-dev-*.dll
-      - name: Upload Artifact (pdb)
-        uses: actions/upload-artifact@v4
-        with:
-          name: pdb
-          path: |
-            build/YimMenu.pdb
+          name: YimMenu-Test
+          path: build/YimMenu.dll
