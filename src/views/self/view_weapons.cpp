@@ -100,17 +100,9 @@ namespace big
 		ImGui::SameLine();
 		components::command_checkbox<"nosway">();
 
-		ImGui::SeparatorText("Bullet Penetration");
-
-bool pen = max_penetration::is_enabled();
-if (ImGui::Checkbox("Max Penetration", &pen))
-{
-    if (pen)
-        max_penetration::enable();
-    else
-        max_penetration::disable();
-}
-
+		ImGui::SeparatorText("BULLET_PENETRATION"_T.data());
+		ImGui::Checkbox("MAX_PENETRATION"_T.data(), &g_max_penetration);
+		
 		components::button("GET_ALL_WEAPONS"_T, [] {
 			for (const auto& [_, weapon] : g_gta_data_service.weapons())
 			{
