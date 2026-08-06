@@ -100,8 +100,8 @@ namespace big
 		ImGui::SameLine();
 		components::command_checkbox<"nosway">();
 
-		ImGui::SeparatorText("BULLET_PENETRATION"_T.data());
-		ImGui::Checkbox("MAX_PENETRATION"_T.data(), &g_max_penetration);
+        ImGui::SeparatorText("BULLET_PENETRATION"_T.data());
+        ImGui::Checkbox("MAX_PENETRATION"_T.data(), &g_max_penetration);
 		
 		components::button("GET_ALL_WEAPONS"_T, [] {
 			for (const auto& [_, weapon] : g_gta_data_service.weapons())
