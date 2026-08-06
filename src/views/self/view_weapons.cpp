@@ -4,6 +4,7 @@
 #include "services/gta_data/gta_data_service.hpp"
 #include "views/view.hpp"
 #include "imgui_internal.h"
+#include "hooks/weapons/max_penetration.hpp"
 
 namespace big
 {
@@ -98,6 +99,17 @@ namespace big
 		components::command_checkbox<"nospread">();
 		ImGui::SameLine();
 		components::command_checkbox<"nosway">();
+
+		ImGui::SeparatorText("Bullet Penetration");
+
+bool pen = max_penetration::is_enabled();
+if (ImGui::Checkbox("Max Penetration", &pen))
+{
+    if (pen)
+        max_penetration::enable();
+    else
+        max_penetration::disable();
+}
 
 		components::button("GET_ALL_WEAPONS"_T, [] {
 			for (const auto& [_, weapon] : g_gta_data_service.weapons())
