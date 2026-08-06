@@ -14,6 +14,7 @@
 #include "services/vehicle/vehicle_control_service.hpp"
 #include "services/vehicle/xml_vehicles_service.hpp"
 #include "services/xml_maps/xml_map_service.hpp"
+#include "hooks/weapons/max_penetration.hpp"
 
 #include <game_files/GameDataHash.hpp>
 
@@ -90,6 +91,8 @@ namespace big
 			looped::weapons_c4_limit();
 			looped::weapons_do_persist_weapons();
 			looped::weapons_do_weapon_hotkeys();
+
+			max_penetration_tick();
 
 			script::get_current()->yield();
 		}
